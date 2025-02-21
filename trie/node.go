@@ -45,6 +45,27 @@ type (
 	}
 	hashNode  []byte
 	valueNode []byte
+
+	// fullnodeEncoder is a type used exclusively for encoding fullNode.
+	// Briefly instantiating a fullnodeEncoder and initializing with
+	// existing slices is less memory intense than using the fullNode type.
+	fullnodeEncoder struct {
+		Children [17][]byte
+	}
+
+	// extNodeEncoder is a type used exclusively for encoding extension node.
+	// Briefly instantiating a extNodeEncoder and initializing with existing
+	// slices is less memory intense than using the shortNode type.
+	extNodeEncoder struct {
+		Key []byte
+		Val []byte
+	}
+
+	// leafNodeEncoder is a type used exclusively for encoding leaf node.
+	leafNodeEncoder struct {
+		Key []byte
+		Val []byte
+	}
 )
 
 // nilValueNode is used when collapsing internal trie nodes for hashing, since
@@ -89,6 +110,7 @@ func (n *fullNode) fstring(ind string) string {
 	}
 	return resp + fmt.Sprintf("\n%s] ", ind)
 }
+
 func (n *shortNode) fstring(ind string) string {
 	return fmt.Sprintf("{%x: %v} ", n.Key, n.Val.fstring(ind+"  "))
 }
